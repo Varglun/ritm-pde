@@ -42,20 +42,21 @@ function draw_dots_from_list(coords) {
     for (let i = 0; i < coords.length; i++) {
         c.beginPath();
         c.arc(coords[i][0], coords[i][1], 3, 0 , 2*Math.PI);
-        c.fillStyle = "black";
+        console.log(Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)));
+        c.fillStyle = "rgb("+ (255*(1- Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)))) + "," + (255*(Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)))) +", "+ (255*(1 - Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2))));
         c.fill();
     }
 }
 
 function coord_from_central_to_base(coord) {
     let x = coord[0];
-    let y = canvas.width / 2 - coord[1];
+    let y = canvas.height / 2 - coord[1];
     return [x, y];
 }
 
 function coord_from_base_to_central(coord) {
     let x = coord[0];
-    let y = canvas.width / 2 - coord[1];
+    let y = canvas.height / 2 - coord[1];
     return [x, y];
 }
 
@@ -171,7 +172,7 @@ function string_vibrate() {
         for (let k = 0; k <= f_hat[0].length / 2; k++) {
             sum += F[k][i]*Math.cos(2*Math.PI*global_time*k);
         }
-        string_y_coords.push(canvas.width / 2 - sum);
+        string_y_coords.push(canvas.height / 2 - sum);
     }
 
     // console.log(string_y_coords);
@@ -186,7 +187,7 @@ function string_vibrate() {
 document.getElementById("vibrate").addEventListener("click", function() {
     let coords_y = [];
     for (let i = 0; i <= n; i++) {
-        coords_y.push([canvas.width / 2 - string_y_coords[i]]);
+        coords_y.push([canvas.height / 2 - string_y_coords[i]]);
     }
     f_hat = dft(coords_y);
 
@@ -204,6 +205,10 @@ document.getElementById("vibrate").addEventListener("click", function() {
             // F2[k].push(((k != 0) + 1) / n * num.re);
         }
     }
+
+
+
+
     string_vibrate();
 })
 

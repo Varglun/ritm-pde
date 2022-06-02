@@ -14,6 +14,23 @@
     </label>
     <button id="submit_number">Submit number</button>
 
+    <fieldset style="width: 50mm;">
+        <legend>Select boundary conditions:</legend>
+    
+        <div>
+          <input type="radio" id="fixed" name="boundary" value="fixed"
+                 checked>
+          <label for="fixed">Fixed</label>
+        </div>
+    
+        <div>
+          <input type="radio" id="free" name="boundary" value="free">
+          <label for="free">Free</label>
+        </div>
+
+    </fieldset>
+    
+
     <button id="vibrate" style="display: block;"> Vibrate</button>
 
     <canvas style="display: block; margin-top: 5mm;"></canvas>
