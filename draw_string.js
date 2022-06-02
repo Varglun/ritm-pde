@@ -87,21 +87,21 @@ document.querySelector('canvas').addEventListener("touchstart", function(event) 
     draw_string_init = true;
 })
 
-document.querySelector('canvas').addEventListener("mouseup", function(event) {
-    draw_string_init = false;
-})
+// document.querySelector('canvas').addEventListener("mouseup", function(event) {
+//     draw_string_init = false;
+// })
 
-document.querySelector('canvas').addEventListener("touchend", function(event) {
-    draw_string_init = false;
-})
+// document.querySelector('canvas').addEventListener("touchend", function(event) {
+//     draw_string_init = false;
+// })
 
-document.querySelector('canvas').addEventListener("mouseleave", function(event) {
-    draw_string_init = false;
-})
+// document.querySelector('canvas').addEventListener("mouseleave", function(event) {
+//     draw_string_init = false;
+// })
 
-document.querySelector('canvas').addEventListener("touchcancel", function(event) {
-    draw_string_init = false;
-})
+// document.querySelector('canvas').addEventListener("touchcancel", function(event) {
+//     draw_string_init = false;
+// })
 
 let mouse_point_x = 0;
 let mouse_point_y = canvas.height/2;
