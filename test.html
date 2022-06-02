@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="complex.js"></script>
+    <script src="dft.js"></script>
+</head>
+<body>
+    <label > Provide number of dots
+        <input type="text" id="number_dots" value="100">
+    </label>
+    <button id="submit_number">Submit number</button>
+
+    <button id="vibrate" style="display: block;"> Vibrate</button>
+
+    <canvas style="display: block; margin-top: 5mm;"></canvas>
+    <script src="draw_string.js"></script>
+    <button id="refresh">Restart</button>
+    <script>
+        document.getElementById("refresh").addEventListener("click", function() {
+            location.reload();
+        })
+    </script>
+</body>
+</html>
