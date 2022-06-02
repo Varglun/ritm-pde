@@ -1,7 +1,7 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-canvas.width = 400;
-canvas.height = 400;
+canvas.width = 350;
+canvas.height = 350;
 
 let n = document.getElementById("number_dots").value;
 let f_hat; // fourier coeff
