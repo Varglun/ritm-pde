@@ -137,10 +137,10 @@ canvas.addEventListener("touchmove", function(event) {
 let mouse_click_x = 0;
 let mouse_click_y = canvas.height/2;
 
-canvas.addEventListener("click", function(event) {
-    mouse_click_x = event.offsetX;
-    mouse_click_y = event.offsetY;
-});
+// canvas.addEventListener("click", function(event) {
+//     mouse_click_x = event.offsetX;
+//     mouse_click_y = event.offsetY;
+// });
 
 
 function draw_string() {
