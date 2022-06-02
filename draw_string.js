@@ -1,13 +1,14 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = 400;
+canvas.height = 400;
 
 let n = document.getElementById("number_dots").value;
 let f_hat; // fourier coeff
 let dt = 0.01; // time step
 let global_time = 0;
 let F = [];
+// let F2 = [];
 
 
 let string_y_coords = [];
@@ -79,7 +80,18 @@ document.querySelector('canvas').addEventListener("mousedown", function(event) {
     draw_string_init = true;
 })
 
+document.querySelector('canvas').addEventListener("touchstart", function(event) {
+    // for (let i = 0; i <= n; i++){
+    //     string_y_coords[i] = canvas.height/2;
+    // }
+    draw_string_init = true;
+})
+
 document.querySelector('canvas').addEventListener("mouseup", function(event) {
+    draw_string_init = false;
+})
+
+document.querySelector('canvas').addEventListener("touchend", function(event) {
     draw_string_init = false;
 })
 
@@ -87,10 +99,28 @@ document.querySelector('canvas').addEventListener("mouseleave", function(event) 
     draw_string_init = false;
 })
 
+document.querySelector('canvas').addEventListener("touchcancel", function(event) {
+    draw_string_init = false;
+})
+
 let mouse_point_x = 0;
 let mouse_point_y = canvas.height/2;
 
 canvas.addEventListener("mousemove", function(event) {
+    mouse_point_x = event.offsetX;
+    mouse_point_y = event.offsetY;
+
+    if (draw_string_init) {
+        let cur_i = Math.floor(mouse_point_x / (canvas.width/n));
+        if (cur_i != 0) {
+            string_y_coords[cur_i] = mouse_point_y;
+        }
+
+        draw_string();
+    }
+})
+
+canvas.addEventListener("touchmove", function(event) {
     mouse_point_x = event.offsetX;
     mouse_point_y = event.offsetY;
 
@@ -163,12 +193,15 @@ document.getElementById("vibrate").addEventListener("click", function() {
 
     // find F vectors
     F = [];
+    // F2 = [];
     let two = new Complex(form = "alg", 2/n, 0);
     for (let k = 0; k <= f_hat[0].length / 2; k++) {
         F.push([]);
+        // F2.push([]);
         for (let j = 0; j < string_y_coords.length; j++) {
             let num = Complex.product(f_hat[0][k], new Complex(form = "exp", 1, 2*Math.PI*k*j/n));
             F[k].push(((k != 0) + 1) / n * num.re);
+            // F2[k].push(((k != 0) + 1) / n * num.re);
         }
     }
     string_vibrate();
