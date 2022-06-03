@@ -111,14 +111,31 @@
 
     <canvas style="display: block; margin-top: 5mm;"></canvas>
     <script src="draw_string.js"></script>
-    <button id="refresh">Restart</button>
+    <button id="refresh">Stop</button>
     <script>
         document.getElementById("refresh").addEventListener("click", function() {
-            location.reload();
+            play = false;
+            document.getElementById("sinusoid").checked = true;
+            n = document.getElementById("number_dots").value;
+            string_y_coords = [];
+            for (let i = 0; i <= n; i++){
+                string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
+            }
+
+            draw_string_init = false;
+            
+            c.beginPath()
+            c.rect(0, 0, canvas.width, canvas.height);
+            c.stroke();
+            // console.log("last draw");
+            draw_string();    
         })
+
+
     </script>
     <script>
         document.getElementById("sinusoid").addEventListener("click", function() {
+            play = false;
             string_y_coords = [];
             for (let i = 0; i <= n; i++){
                 string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
@@ -132,6 +149,7 @@
             draw_string();              
         })
         document.getElementById("triangle").addEventListener("click", function() {
+            play = false;
             string_y_coords = [];
             for (let i = 0; i <= n; i++){
                 string_y_coords[i] = canvas.height/2 - ((i/n>0.4 && i/n <= 0.5) * 2 * (i/n - 0.4) + (i/n > 0.5 && i/n <= 0.6) * (2 - 2 * (i/n + 0.4)))*canvas.height/2;
@@ -145,6 +163,7 @@
             draw_string();              
         })
         document.getElementById("normal").addEventListener("click", function() {
+            play = false;
             string_y_coords = [];
             for (let i = 0; i <= n; i++){
                 string_y_coords[i] = canvas.height/2 - (Math.exp(-(i/n-0.5)*(i/n-0.5)*200))*canvas.height/3;
@@ -158,6 +177,7 @@
             draw_string();              
         })
         document.getElementById("plot").addEventListener("click", function() {
+            play = false;
             function_text = document.getElementById("function").value; 
             function_text = function_text.replaceAll("sin", "Math.sin");
             function_text = function_text.replaceAll("cos", "Math.cos");

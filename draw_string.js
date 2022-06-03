@@ -8,6 +8,8 @@ let f_hat; // fourier coeff
 let dt = 0.01; // time step
 let global_time = 0;
 let F = [];
+let play = true;
+let myReq;
 // let F2 = [];
 
 
@@ -165,27 +167,29 @@ function draw_string() {
 
 function string_vibrate() {
     // console.log(string_y_coords);
-    window.requestAnimationFrame(string_vibrate);
-    string_y_coords = [];
+    // console.log(play);
+    if (play) {
+        window.requestAnimationFrame(string_vibrate);
+        string_y_coords = [];
     
-    for (let i = 0; i < n; i++) {
-        let sum = 0;
-        for (let k = 0; k <= f_hat[0].length / 2; k++) {
-            sum += F[k][i]*Math.cos(2*Math.PI*global_time*k);
+        for (let i = 0; i < n; i++) {
+            let sum = 0;
+            for (let k = 0; k <= f_hat[0].length / 2; k++) {
+                sum += F[k][i]*Math.cos(2*Math.PI*global_time*k);
+            }
+            string_y_coords.push(canvas.height / 2 - sum);
         }
-        string_y_coords.push(canvas.height / 2 - sum);
-    }
-
-    // console.log(string_y_coords);
-    global_time += dt;
-    draw_string();
     
-    
-
+        // console.log(string_y_coords);
+        global_time += dt;
+        draw_string();
+    } 
     
 }
 
 document.getElementById("vibrate").addEventListener("click", function() {
+    global_time = 0;
+    play = true;
     let coords_y = [];
     for (let i = 0; i <= n; i++) {
         coords_y.push([canvas.height / 2 - string_y_coords[i]]);
