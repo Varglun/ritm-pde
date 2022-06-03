@@ -23,17 +23,17 @@
         <div>
           <input type="radio" id="sinusoid" name="initial" value="sinusoid"
                  checked>
-          <label for="fixed">Sinusoid</label>
+          <label for="sinusoid">Sinusoid</label>
         </div>
     
         <div>
           <input type="radio" id="triangle" name="initial" value="triangle">
-          <label for="free">Triangle</label>
+          <label for="triangle">Triangle</label>
         </div>
 
         <div>
-            <input type="radio" id="rectangle" name="initial" value="rectangle">
-            <label for="free">Rectangle</label>
+            <input type="radio" id="normal" name="initial" value="normal">
+            <label for="normal">Normal</label>
           </div>
 
     </fieldset>
@@ -134,7 +134,7 @@
         document.getElementById("triangle").addEventListener("click", function() {
             string_y_coords = [];
             for (let i = 0; i <= n; i++){
-                string_y_coords[i] = canvas.height/2 - ((i/n < 0.5) * 2 * i/n + (i/n >= 0.5) * (2 - 2 * i/n))*canvas.height/2;
+                string_y_coords[i] = canvas.height/2 - ((i/n>0.4 && i/n <= 0.5) * 2 * (i/n - 0.4) + (i/n > 0.5 && i/n <= 0.6) * (2 - 2 * (i/n + 0.4)))*canvas.height/2;
             }
 
             draw_string_init = false;
@@ -144,10 +144,10 @@
             c.stroke();
             draw_string();              
         })
-        document.getElementById("rectangle").addEventListener("click", function() {
+        document.getElementById("normal").addEventListener("click", function() {
             string_y_coords = [];
             for (let i = 0; i <= n; i++){
-                string_y_coords[i] = canvas.height/2 - ((i/n < 0.25) * 0.5 + (i/n >= 0.25 && i/n < 0.75) * (-0.5) + (i/n >= 0.75) * 0.5)*canvas.height/2;
+                string_y_coords[i] = canvas.height/2 - (Math.exp(-(i/n-0.5)*(i/n-0.5)*200))*canvas.height/3;
             }
 
             draw_string_init = false;
