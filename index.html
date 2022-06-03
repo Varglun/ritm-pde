@@ -5,34 +5,109 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="complex.js"></script>
     <script src="dft.js"></script>
 </head>
 <body>
-    <p>Choose the initial form of a string and click vibrate. Lean back and relax.</p>
+    <p>Choose an initial form of the string (you can select from the list, insert as a function or drag dots for an arbitrary form) and click vibrate. Lean back and relax.</p>
     <label > Provide number of dots
-        <input type="text" id="number_dots" value="10">
+        <input type="text" id="number_dots" value="100">
     </label>
     <button id="submit_number">Submit number</button>
 
-    <fieldset style="width: 50mm;">
-        <legend>Select boundary conditions (doesn't work yet):</legend>
+    <fieldset style="width: 50mm; margin-top: 5mm;">
+        <legend>Select initial form:</legend>
     
         <div>
-          <input type="radio" id="fixed" name="boundary" value="fixed"
+          <input type="radio" id="sinusoid" name="initial" value="sinusoid"
                  checked>
-          <label for="fixed">Fixed</label>
+          <label for="fixed">Sinusoid</label>
         </div>
     
         <div>
-          <input type="radio" id="free" name="boundary" value="free">
-          <label for="free">Free</label>
+          <input type="radio" id="triangle" name="initial" value="triangle">
+          <label for="free">Triangle</label>
         </div>
+
+        <div>
+            <input type="radio" id="rectangle" name="initial" value="rectangle">
+            <label for="free">Rectangle</label>
+          </div>
 
     </fieldset>
-    
 
-    <button id="vibrate" style="display: block;"> Vibrate</button>
+    
+    <label > \(y(t) = \) 
+        <input type="text" style="width: 50mm; margin-top: 5mm;" id="function">
+        \(t \in (0,1); y \in (-1,1)\)
+    </label>
+    <button id="plot" style="display: inline; margin-top: 5mm;"> Plot</button>
+    <br>
+    <button id="show_functions" style="margin-top: 5mm;">Hint: math functions designation</button>
+    <div id="math_functions" style="display: none;">
+        <table>
+            <tr>
+                <th>Math function</th>
+                <th>Designation</th>
+            </tr>
+            <tr>
+                <td>\(a^b\)</td>
+                <td>pow(a,b)</td>
+            </tr>
+            <tr>
+                <td>\(e^t\)</td>
+                <td>exp(t)</td>
+            </tr>
+            <tr>
+                <td>\(\ln{t}\)</td>
+                <td>ln(t)</td>
+            </tr>
+            <tr>
+                <td>\(\sin{t}\)</td>
+                <td>sin(t)</td>
+            </tr>
+            <tr>
+                <td>\(\cos{t}\)</td>
+                <td>cos(t)</td>
+            </tr>
+            <tr>
+                <td>\(\tan{t}\)</td>
+                <td>tan(t)</td>
+            </tr>
+            <tr>
+                <td>\(\arcsin{t}\)</td>
+                <td>asin(t)</td>
+            </tr>
+            <tr>
+                <td>\(\arccos{t}\)</td>
+                <td>acos(t)</td>
+            </tr>
+            <tr>
+                <td>\(\arctan{t}\)</td>
+                <td>atan(t)</td>
+            </tr>
+            <tr>
+                <td>\(\pi\)</td>
+                <td>pi</td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        let functions_show = false;
+        document.getElementById("show_functions").addEventListener("click", function() {
+            if (!functions_show) {
+                document.getElementById("math_functions").style = "display: ;"
+                functions_show = true;
+            } else {
+                document.getElementById("math_functions").style = "display: none;"
+                functions_show = false;
+            }
+            
+        })
+    </script>
+    <button id="vibrate" style="display: block; margin-top: 5mm;"> Vibrate</button>
 
     <canvas style="display: block; margin-top: 5mm;"></canvas>
     <script src="draw_string.js"></script>
@@ -42,5 +117,79 @@
             location.reload();
         })
     </script>
+    <script>
+        document.getElementById("sinusoid").addEventListener("click", function() {
+            string_y_coords = [];
+            for (let i = 0; i <= n; i++){
+                string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
+            }
+
+            draw_string_init = false;
+            
+            c.beginPath()
+            c.rect(0, 0, canvas.width, canvas.height);
+            c.stroke();
+            draw_string();              
+        })
+        document.getElementById("triangle").addEventListener("click", function() {
+            string_y_coords = [];
+            for (let i = 0; i <= n; i++){
+                string_y_coords[i] = canvas.height/2 - ((i/n < 0.5) * 2 * i/n + (i/n >= 0.5) * (2 - 2 * i/n))*canvas.height/2;
+            }
+
+            draw_string_init = false;
+            
+            c.beginPath()
+            c.rect(0, 0, canvas.width, canvas.height);
+            c.stroke();
+            draw_string();              
+        })
+        document.getElementById("rectangle").addEventListener("click", function() {
+            string_y_coords = [];
+            for (let i = 0; i <= n; i++){
+                string_y_coords[i] = canvas.height/2 - ((i/n < 0.25) * 0.5 + (i/n >= 0.25 && i/n < 0.75) * (-0.5) + (i/n >= 0.75) * 0.5)*canvas.height/2;
+            }
+
+            draw_string_init = false;
+            
+            c.beginPath()
+            c.rect(0, 0, canvas.width, canvas.height);
+            c.stroke();
+            draw_string();              
+        })
+        document.getElementById("plot").addEventListener("click", function() {
+            function_text = document.getElementById("function").value; 
+            function_text = function_text.replaceAll("sin", "Math.sin");
+            function_text = function_text.replaceAll("cos", "Math.cos");
+            function_text = function_text.replaceAll("exp", "Math.exp");
+            function_text = function_text.replaceAll("tan", "Math.tan");
+            function_text = function_text.replaceAll("atan", "Math.atan");
+            function_text = function_text.replaceAll("ln", "Math.log");
+            function_text = function_text.replaceAll("asin", "Math.asin");
+            function_text = function_text.replaceAll("acos", "Math.acos");
+            function_text = function_text.replaceAll("pow", "Math.pow");
+            function_text = function_text.replaceAll("pi", "Math.PI");
+            function_text = function_text.replaceAll("sinh", "Math.sinh");
+            function_text = function_text.replaceAll("cosh", "Math.cosh");
+            function_text = function_text.replaceAll("tanh", "Math.tanh");
+            function_text = function_text.replaceAll("asinh", "Math.asinh");
+            function_text = function_text.replaceAll("acosh", "Math.acosh");
+            function_text = function_text.replaceAll("atanh", "Math.atanh");            
+            let t;
+            string_y_coords = [];
+            for (let i = 0; i <= n; i++){
+                t = i/n;
+                string_y_coords[i] = canvas.height/2 - eval(function_text)*canvas.height/2;
+            }
+
+            draw_string_init = false;
+            
+            c.beginPath()
+            c.rect(0, 0, canvas.width, canvas.height);
+            c.stroke();
+            draw_string();              
+        })
+    </script>
+
 </body>
 </html>

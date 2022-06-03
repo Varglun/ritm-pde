@@ -13,7 +13,7 @@ let F = [];
 
 let string_y_coords = [];
 for (let i = 0; i <= n; i++){
-    string_y_coords[i] = canvas.height/2;
+    string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
 }
 let draw_string_init = false;
 
@@ -23,10 +23,11 @@ c.stroke();
 draw_string();
 
 document.getElementById("submit_number").addEventListener("click", function() {
+    document.getElementById("sinusoid").checked = true;
     n = document.getElementById("number_dots").value;
     string_y_coords = [];
     for (let i = 0; i <= n; i++){
-        string_y_coords[i] = canvas.height/2;
+        string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
     }
 
     draw_string_init = false;
@@ -42,7 +43,6 @@ function draw_dots_from_list(coords) {
     for (let i = 0; i < coords.length; i++) {
         c.beginPath();
         c.arc(coords[i][0], coords[i][1], 3, 0 , 2*Math.PI);
-        console.log(Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)));
         c.fillStyle = "rgb("+ (255*(1- Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)))) + "," + (255*(Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2)))) +", "+ (255*(1 - Math.abs((canvas.height / 2 - coords[i][1])/(canvas.height/2))));
         c.fill();
     }
@@ -145,6 +145,7 @@ canvas.addEventListener("click", function(event) {
 
 
 function draw_string() {
+    // console.log(string_y_coords);
     
     c.beginPath()
     c.fillStyle = "white";
