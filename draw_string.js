@@ -10,13 +10,16 @@ let global_time = 0;
 let F = [];
 let play = true;
 let myReq;
+let freq = 1;
 // let F2 = [];
 
 
 let string_y_coords = [];
-for (let i = 0; i <= n; i++){
+string_y_coords[0] = canvas.height/2;;
+for (let i = 1; i < n; i++){
     string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
 }
+string_y_coords[n] = canvas.height/2;
 let draw_string_init = false;
 
 c.beginPath()
@@ -28,9 +31,10 @@ document.getElementById("submit_number").addEventListener("click", function() {
     document.getElementById("sinusoid").checked = true;
     n = document.getElementById("number_dots").value;
     string_y_coords = [];
-    for (let i = 0; i <= n; i++){
+    for (let i = 0; i < n; i++){
         string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
     }
+    string_y_coords[n] = canvas.height/2;
 
     draw_string_init = false;
     
@@ -38,6 +42,11 @@ document.getElementById("submit_number").addEventListener("click", function() {
     c.rect(0, 0, canvas.width, canvas.height);
     c.stroke();
     draw_string();    
+})
+
+
+document.getElementById("submit_freq").addEventListener("click", function() {
+    freq = document.getElementById("frequency").value;
 })
 
 
@@ -149,18 +158,18 @@ canvas.addEventListener("click", function(event) {
 function draw_string() {
     // console.log(string_y_coords);
     
-    c.beginPath()
+    c.beginPath();
     c.fillStyle = "white";
     c.fillRect(0, 0, canvas.width, canvas.height);
     
     // c.fill();
     let coords = [];
     let dx = canvas.width/n;
-    for (let i = 0; i <= n; i++) {
+    for (let i = 0; i < string_y_coords.length; i++) {
         coords.push([i*dx, string_y_coords[i]]);
     }
     draw_dots_from_list(coords);
-    c.beginPath()
+    c.beginPath();
     c.rect(0, 0, canvas.width, canvas.height);
     c.stroke();
 }
@@ -170,15 +179,17 @@ function string_vibrate() {
     // console.log(play);
     if (play) {
         window.requestAnimationFrame(string_vibrate);
-        string_y_coords = [];
+        // string_y_coords = [];
     
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < string_y_coords.length - 1; i++) {
             let sum = 0;
             for (let k = 0; k <= f_hat[0].length / 2; k++) {
-                sum += F[k][i]*Math.cos(2*Math.PI*global_time*k);
+                sum += F[k][i]*Math.cos(2*Math.PI*global_time*k*freq);
             }
-            string_y_coords.push(canvas.height / 2 - sum);
+            // string_y_coords.push(canvas.height / 2 - sum);
+            string_y_coords[i] = (canvas.height / 2 - sum);
         }
+        // string_y_coords[n] = canvas.height/2;
     
         // console.log(string_y_coords);
         global_time += dt;
@@ -190,23 +201,44 @@ function string_vibrate() {
 document.getElementById("vibrate").addEventListener("click", function() {
     global_time = 0;
     play = true;
-    let coords_y = [];
-    for (let i = 0; i <= n; i++) {
-        coords_y.push([canvas.height / 2 - string_y_coords[i]]);
+    let coords_y_right = [];
+    for (let i = 0; i < string_y_coords.length - 1; i++) {
+        coords_y_right.push([canvas.height / 2 - string_y_coords[i]]);
     }
+    
+    let coords_y_left = [...coords_y_right];
+
+    for (let i = 0; i < coords_y_left.length; i++) {
+        coords_y_left[i] = [-1 * coords_y_left[i][0]];
+    }
+    coords_y_left.push([0]);
+    coords_y_left.reverse();
+    coords_y_left.pop();
+    
+    let coords_y = coords_y_left.concat(coords_y_right);  
+
+    console.log(coords_y_left[0]);
+    console.log(coords_y_left[coords_y_left.length-1]);
+    console.log(coords_y_right[0]);
+    console.log(coords_y_right[coords_y_right.length-1]);
+    console.log(coords_y_left.length);
+    console.log(coords_y_right.length);
+    console.log(coords_y.length);
+    
+
+
     f_hat = dft(coords_y);
 
 
     // find F vectors
     F = [];
-    // F2 = [];
-    let two = new Complex(form = "alg", 2/n, 0);
+    // let two = new Complex(form = "alg", 2/n, 0);
     for (let k = 0; k <= f_hat[0].length / 2; k++) {
         F.push([]);
         // F2.push([]);
-        for (let j = 0; j < string_y_coords.length; j++) {
-            let num = Complex.product(f_hat[0][k], new Complex(form = "exp", 1, 2*Math.PI*k*j/n));
-            F[k].push(((k != 0) + 1) / n * num.re);
+        for (let j = string_y_coords.length - 1; j < 2*(string_y_coords.length - 1); j++) {
+            let num = Complex.product(f_hat[0][k], new Complex(form = "exp", 1, 2*Math.PI*k*j/(2*n)));
+            F[k].push(((k != 0) + 1) / (2*n) * num.re);
             // F2[k].push(((k != 0) + 1) / n * num.re);
         }
     }

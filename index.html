@@ -13,9 +13,14 @@
 <body>
     <p>Choose an initial form of the string (you can select from the list, insert as a function or drag dots for an arbitrary form) and click vibrate. Lean back and relax.</p>
     <label > Provide number of dots
-        <input type="text" id="number_dots" value="100">
+        <input type="text" id="number_dots" value="100" style="width: 20mm;">
     </label>
     <button id="submit_number">Submit number</button>
+    <br>
+    <label > Provide frequency
+        <input type="text" id="frequency" value="1" style="margin-top: 2mm; width: 20mm;">
+    </label>
+    <button id="submit_freq">Submit frequency</button>
 
     <fieldset style="width: 50mm; margin-top: 5mm;">
         <legend>Select initial form:</legend>
@@ -136,8 +141,8 @@
     <script>
         document.getElementById("sinusoid").addEventListener("click", function() {
             play = false;
-            string_y_coords = [];
-            for (let i = 0; i <= n; i++){
+            // string_y_coords = [];
+            for (let i = 0; i < n; i++){
                 string_y_coords[i] = canvas.height/2 - Math.sin(2*Math.PI*i/n)*canvas.height/2;
             }
 
@@ -150,8 +155,8 @@
         })
         document.getElementById("triangle").addEventListener("click", function() {
             play = false;
-            string_y_coords = [];
-            for (let i = 0; i <= n; i++){
+            // string_y_coords = [];
+            for (let i = 0; i < n; i++){
                 string_y_coords[i] = canvas.height/2 - ((i/n>0.4 && i/n <= 0.5) * 2 * (i/n - 0.4) + (i/n > 0.5 && i/n <= 0.6) * (2 - 2 * (i/n + 0.4)))*canvas.height/2;
             }
 
@@ -164,8 +169,8 @@
         })
         document.getElementById("normal").addEventListener("click", function() {
             play = false;
-            string_y_coords = [];
-            for (let i = 0; i <= n; i++){
+            // string_y_coords = [];
+            for (let i = 1; i < n; i++){
                 string_y_coords[i] = canvas.height/2 - (Math.exp(-(i/n-0.5)*(i/n-0.5)*200))*canvas.height/3;
             }
 
@@ -196,8 +201,8 @@
             function_text = function_text.replaceAll("acosh", "Math.acosh");
             function_text = function_text.replaceAll("atanh", "Math.atanh");            
             let t;
-            string_y_coords = [];
-            for (let i = 0; i <= n; i++){
+            // string_y_coords = [];
+            for (let i = 1; i < n; i++){
                 t = i/n;
                 string_y_coords[i] = canvas.height/2 - eval(function_text)*canvas.height/2;
             }
